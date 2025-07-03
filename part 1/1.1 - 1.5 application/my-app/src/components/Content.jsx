@@ -4,16 +4,16 @@ const Content = (props) => {
   return (
     <>
       <Part
-        name={props.exerciseCounts[0].name}
-        exerciseCount={props.exerciseCounts[0].exerciseCount}
+        name={props.parts[0].name}
+        exercises={props.parts[0].exercises}
       ></Part>
       <Part
-        name={props.exerciseCounts[1].name}
-        exerciseCount={props.exerciseCounts[1].exerciseCount}
+        name={props.parts[1].name}
+        exercises={props.parts[1].exercises}
       ></Part>
       <Part
-        name={props.exerciseCounts[2].name}
-        exerciseCount={props.exerciseCounts[2].exerciseCount}
+        name={props.parts[2].name}
+        exercises={props.parts[2].exercises}
       ></Part>
     </>
   );

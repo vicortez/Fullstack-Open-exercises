@@ -1,27 +1,38 @@
+import ClassComponent from "./components/ClassComponent";
 import Content from "./components/Content";
+import FunctionComponent from "./components/FunctionComponent";
 import Header from "./components/Header";
 import Total from "./components/Total";
 
 const App = () => {
-  const course = "Half Stack application development";
-  const part1 = "Fundamentals of React";
-  const exercises1 = 10;
-  const part2 = "Using props to pass data";
-  const exercises2 = 7;
-  const part3 = "State of a component";
-  const exercises3 = 14;
+  const course = {
+    name: "Half Stack application development",
+    parts: [
+      {
+        name: "Fundamentals of React",
+        exercises: 10,
+      },
+      {
+        name: "Using props to pass data",
+        exercises: 7,
+      },
+      {
+        name: "State of a component",
+        exercises: 14,
+      },
+    ],
+  };
 
   return (
     <div>
-      <Header courseName={course}></Header>
-      <Content
-        exerciseCounts={[
-          { name: part1, exerciseCount: exercises1 },
-          { name: part2, exerciseCount: exercises2 },
-          { name: part3, exerciseCount: exercises3 },
-        ]}
-      ></Content>
-      <Total counts={[exercises1, exercises2, exercises3]}></Total>
+      <Header courseName={course.name}></Header>
+      <Content parts={course.parts}></Content>
+      <Total parts={course.parts}></Total>
+      <hr></hr>
+      <br></br>
+      <ClassComponent a={"a"}></ClassComponent>
+      <br></br>
+      <FunctionComponent></FunctionComponent>
     </div>
   );
 };
