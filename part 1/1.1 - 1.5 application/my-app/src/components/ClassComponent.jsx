@@ -3,7 +3,7 @@ import React from "react";
 class ClassComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { initial: true };
+    this.state = { val: true };
   }
 
   componentDidMount() {
@@ -12,9 +12,9 @@ class ClassComponent extends React.Component {
 
   handleClick() {
     this.setState(
-      (prevState) => ({ initial: !prevState.initial }),
+      (prevState) => ({ val: !prevState.val }),
       () => {
-        console.log("new state: " + this.state.initial);
+        console.log("new state: " + this.state.val);
       }
     );
   }
@@ -22,7 +22,9 @@ class ClassComponent extends React.Component {
   render() {
     return (
       <div>
+        <div>some tests, not related to the exercise</div>
         <div>hi: {this.props.a}</div>
+        <div>state: {String(this.state.val)}</div>
         <button onDoubleClick={() => this.handleClick()}> CLICK</button>
       </div>
     );
