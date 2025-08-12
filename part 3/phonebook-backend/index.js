@@ -1,9 +1,18 @@
 const express = require('express')
 let { phonebookData } = require('./data')
+const morgan = require('morgan')
 
 const app = express()
 
 app.use(express.json())
+
+morgan.token('req-body', (req, res) => {
+  if (req.body) return JSON.stringify(req.body)
+  return '-'
+})
+const morganFormatter =
+  ':method :url :status :res[content-length] - :response-time ms :req-body'
+app.use(morgan(morganFormatter))
 
 app.get('/', (req, res) => {
   res.send('hi')
@@ -38,8 +47,6 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-  console.log(req.body)
-
   const body = req.body
   // validate
   if (!body.name || !body.number) {
