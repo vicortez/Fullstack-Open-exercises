@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(express.static('client/dist'))
 
 morgan.token('req-body', (req, res) => {
   if (req.body) return JSON.stringify(req.body)
@@ -14,7 +15,7 @@ const morganFormatter =
   ':method :url :status :res[content-length] - :response-time ms :req-body'
 app.use(morgan(morganFormatter))
 
-app.get('/', (req, res) => {
+app.get('/health', (req, res) => {
   res.send('hi')
 })
 
@@ -77,6 +78,10 @@ app.get('/info', (req, res) => {
   res.send(page)
 })
 
-const PORT = 3001
-app.listen(PORT)
-console.log(`Server started on port ${PORT}`)
+// add a
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`)
+})
+console.log('Server starting..')
