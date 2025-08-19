@@ -1,7 +1,8 @@
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
-const Phonebook = require('./models/phonebook')
+const Phonebook = require('./src/models/phonebook')
+const errorHandler = require('./src/middlewares/errorHandler')
 
 const app = express()
 
@@ -16,64 +17,105 @@ const morganFormatter =
   ':method :url :status :res[content-length] - :response-time ms :req-body'
 app.use(morgan(morganFormatter))
 
+// -- endpoints
 app.get('/health', (req, res) => {
   res.send('hi')
 })
 
-app.get('/api/persons', (req, res) => {
-  Phonebook.find({}).then((phonebooks) => {
-    res.json(phonebooks)
-  })
+app.get('/api/persons', (req, res, next) => {
+  Phonebook.find({})
+    .then((phonebooks) => {
+      res.json(phonebooks)
+    })
+    .catch(next)
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
+  Phonebook.findById(req.params.id)
+    .then((phonebook) => {
+      if (!phonebook) {
+        const error = new Error('Not found')
+        error.status = 404
+        throw error
+      }
+
+      res.json(phonebook)
+    })
+    .catch(next)
+})
+
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
-  if (!id) {
-    res.status(404).json({ error: 'Not found', message: 'id not recognized' })
-    return
-  }
-  const person = phonebookData.find((el) => el.id === id) // 1 person: find, not filter.
-  if (!person) {
-    res.status(404).json({ error: 'Not found', message: 'Person not found' })
-    return
-  }
-  res.json(person)
+  Phonebook.findByIdAndDelete(id)
+    .then((doc) => {
+      res.status(204).end()
+    })
+    .catch(next)
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = req.params.id
-  if (!id) {
-    res.status(404).json({ error: 'Not found', message: 'id not recognized' })
-    return
-  }
-  phonebookData = phonebookData.filter((el) => el.id !== id)
-  res.status(204).end()
-})
-
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
   // validate
   if (!body.name || !body.number) {
-    res.status(400).json({ error: 'Missing fields', message: 'Missing fields' })
+    const error = new Error('Missing fields')
+    error.status = 400
+    next(error)
     return
   }
 
-  const newPerson = new Phonebook({
-    name: body.name,
-    number: body.number,
-  })
-  console.log(body)
-  // save
-  newPerson.save().then((doc) => res.json(doc))
+  Phonebook.exists({ name: req.body.name })
+    .then((foundPhonebook) => {
+      if (foundPhonebook) {
+        const error = new Error('Name already exists')
+        error.status = 400
+        throw error
+      }
+      return
+    })
+    .then(() => {
+      const newPhonebook = new Phonebook({
+        name: body.name,
+        number: body.number,
+      })
+      // save
+      return newPhonebook.save()
+    })
+    .then((doc) => res.json(doc))
+    .catch(next)
 })
 
-app.get('/info', (req, res) => {
-  const page = `
-  <p>Phonebook has info for ${phonebookData.length} people</p>
-  <p>${new Date().toString()}</p>
-  `
-  res.send(page)
+app.put('/api/persons/:id', (req, res, next) => {
+  Phonebook.findById(req.params.id)
+    .then((phonebook) => {
+      if (!phonebook) {
+        const error = new Error('Phonebook not found')
+        error.status = 404
+        throw error
+      }
+      phonebook.name = req.body.name
+      phonebook.number = req.body.number
+      return phonebook.save()
+    })
+    .then((savedPhonebook) => {
+      res.json(savedPhonebook)
+    })
+    .catch(next)
 })
+
+app.get('/info', (req, res, next) => {
+  Phonebook.countDocuments({})
+    .then((result) => {
+      const page = `
+<p>Phonebook has info for ${result} people</p>
+<p>${new Date().toString()}</p>
+  `
+      res.send(page)
+    })
+    .catch(next)
+})
+// --
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
