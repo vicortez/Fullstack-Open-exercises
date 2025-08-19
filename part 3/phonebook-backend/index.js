@@ -1,6 +1,7 @@
+require('dotenv').config()
 const express = require('express')
-let { phonebookData } = require('./data')
 const morgan = require('morgan')
+const Phonebook = require('./models/phonebook')
 
 const app = express()
 
@@ -20,7 +21,9 @@ app.get('/health', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  res.json(phonebookData)
+  Phonebook.find({}).then((phonebooks) => {
+    res.json(phonebooks)
+  })
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -54,20 +57,14 @@ app.post('/api/persons', (req, res) => {
     res.status(400).json({ error: 'Missing fields', message: 'Missing fields' })
     return
   }
-  const nameAlreadyExists = phonebookData.some((el) => el.name === body.name)
-  if (nameAlreadyExists) {
-    res
-      .status(400)
-      .json({ error: 'Name already exists', message: 'Name already exists' })
-    return
-  }
-  // create id ]0-100k
-  const id = Math.trunc(Math.random() * 100000) + 1
 
-  const newPerson = { id, name: body.name, number: body.number }
+  const newPerson = new Phonebook({
+    name: body.name,
+    number: body.number,
+  })
+  console.log(body)
   // save
-  phonebookData.push(newPerson)
-  res.json(newPerson)
+  newPerson.save().then((doc) => res.json(doc))
 })
 
 app.get('/info', (req, res) => {
@@ -77,8 +74,6 @@ app.get('/info', (req, res) => {
   `
   res.send(page)
 })
-
-// add a
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
