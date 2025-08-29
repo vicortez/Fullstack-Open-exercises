@@ -4,7 +4,7 @@ const url = process.env.MONGODB_URL
 if (!url) {
   throw new Error('MONGODB_URL missing')
 }
-const db = mongoose
+mongoose
   .connect(url)
   .then((res) => console.log('Connected to MongoDB successfully'))
   .catch((err) => console.log('Error connecting to mongoDB'))
