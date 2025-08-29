@@ -69,17 +69,25 @@ const App = () => {
             setNewNumber("")
           })
           .catch((err) => {
-            setErrorMessage(`${newName} has already been removed`)
+            if (err.status === 404) {
+              setErrorMessage(`${newName} has already been removed`)
+            } else {
+              setErrorMessage(err.response.data?.error || err.message)
+            }
           })
       }
     } else {
-      createPerson(newPerson).then((updatedPerson) => {
-        // alternatively, could use prev.concat(x)
-        setPersons((prev) => [...prev, updatedPerson])
-        setSuccessMessage(`Added ${newName}`)
-        setNewName("")
-        setNewNumber("")
-      })
+      createPerson(newPerson)
+        .then((updatedPerson) => {
+          // alternatively, could use prev.concat(x)
+          setPersons((prev) => [...prev, updatedPerson])
+          setSuccessMessage(`Added ${newName}`)
+          setNewName("")
+          setNewNumber("")
+        })
+        .catch((err) => {
+          setErrorMessage(err.response.data?.error || err.message)
+        })
     }
   }
 

@@ -10,8 +10,20 @@ const db = mongoose
   .catch((err) => console.log('Error connecting to mongoDB'))
 
 const phonebookSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minLength: 3,
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    validate: {
+      validator: function (val) {
+        return /^\d{2,3}-\d{1,6}$/.test(val)
+      },
+      message: (props) => `${props.value} is not a valid phone number!`,
+    },
+  },
 })
 
 phonebookSchema.set('toJSON', {

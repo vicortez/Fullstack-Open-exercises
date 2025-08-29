@@ -9,6 +9,9 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === 'CastError') {
     res.status(400).send({ error: 'Casting error. Malformed id?' })
     return
+  } else if (error.name === 'ValidationError') {
+    res.status(400).send({ error: error.message })
+    return
   }
 
   res.status(error.status ?? 500).send({ error: error.message })
