@@ -1,0 +1,28 @@
+{
+  "name": "blog-list-app",
+  "version": "1.0.0",
+  "description": "Created for the fullstackopen course - a site for listing blog posts you like",
+  "license": "ISC",
+  "author": "Victor Cortez",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=local node --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.18.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "eslint": "^9.34.0",
+    "globals": "^16.3.0",
+    "supertest": "^7.1.4"
+  }
+}
