@@ -6,6 +6,7 @@ const errorHandler = require('./middlewares/errorHandler')
 
 const app = express()
 
+mongoose.set('strictQuery', true)
 const mongoUrl = MONGODB_URI
 mongoose
   .connect(mongoUrl)
@@ -14,7 +15,7 @@ mongoose
 
 app.use(express.json())
 
-app.use(blogsRouter)
+app.use('/api/blogs', blogsRouter)
 app.use(errorHandler)
 
 module.exports = app
