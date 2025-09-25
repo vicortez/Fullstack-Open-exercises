@@ -1,4 +1,4 @@
-const initialBlogs = [
+const initialBlogsRaw = [
   {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
@@ -24,6 +24,9 @@ const initialBlogs = [
     __v: 0,
   },
 ]
+const getInitialBlogs = (userId) => {
+  return initialBlogsRaw.map((el) => ({ ...el, user: userId }))
+}
 
 const sampleBlogs = [
   {
@@ -90,5 +93,6 @@ const listWithOneBlog = [
 module.exports = {
   sampleBlogs,
   listWithOneBlog,
-  initialBlogs,
+  initialBlogsRaw,
+  getInitialBlogs,
 }

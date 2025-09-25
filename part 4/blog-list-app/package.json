@@ -8,14 +8,15 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
-    "dev": "cross-env NODE_ENV=local node --watch index.js",
-    "test": "cross-env NODE_ENV=test node --test",
+    "dev": "cross-env NODE_ENV=local node --inspect --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1 \"./src/tests/**/*.test.{cjs,mjs,js}\"",
     "lint": "eslint ."
   },
   "dependencies": {
     "cross-env": "^10.0.0",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^8.18.0"
   },
