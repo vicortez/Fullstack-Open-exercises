@@ -1,0 +1,19 @@
+.notification {
+  border-style: solid;
+  border-color: black;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 1px 6px;
+  background: lightgray;
+  font-size: large;
+}
+
+.green-notification {
+  border-color: green;
+  color: darkgreen;
+}
+
+.red-notification {
+  border-color: red;
+  color: darkred;
+}

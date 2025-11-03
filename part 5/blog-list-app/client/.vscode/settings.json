@@ -1,0 +1,7 @@
+{
+  "editor.rulers": [100],
+  "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "editor.formatOnSave": true,
+  "nodejs-testing.env": { "NODE_ENV": "test" }
+}

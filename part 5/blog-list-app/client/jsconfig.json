@@ -1,0 +1,14 @@
+// This file is here just to force VSCode to recognize the folder as a JavaScript project
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2024",
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strict": true
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}
