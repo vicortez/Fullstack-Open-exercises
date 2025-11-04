@@ -42,9 +42,7 @@ blogsRouter.delete('/:id', userExtractor, async (req, res) => {
   if (blog) {
     // at this level, we ideally just want to call something like canDelete()
     if (!compareIds(user._id, blog.user)) {
-      res
-        .status(401)
-        .json({ error: 'user does not have permission for that action' })
+      res.status(401).json({ error: 'user does not have permission for that action' })
       return
     }
     await blog.deleteOne()
@@ -58,13 +56,16 @@ blogsRouter.put('/:id', userExtractor, async (req, res) => {
   const id = req.params.id
 
   const newBlogData = {
-    title: req.body.title,
-    author: req.body.author,
-    url: req.body.url,
+    title: req.body.title ?? null,
+    author: req.body.author ?? null,
+    url: req.body.url ?? null,
     likes: req.body.likes ?? 0,
+    // we dont allow replacing the user in the put request.
     user: undefined,
   }
+  console.log(req.body)
 
+  // doesn't replace properties that are set as undefined
   const updatedBlogDoc = await Blog.findByIdAndUpdate(id, newBlogData, {
     new: true,
     runValidators: true,

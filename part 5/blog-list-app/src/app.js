@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const blogsRouter = require('./controllers/blogs')
 const { MONGODB_URI } = require('./utils/configs')
 const errorHandler = require('./middlewares/error_handler')
-const { tokenExtractor, userExtractor } = require('./middlewares/auth')
+const { tokenExtractor } = require('./middlewares/auth')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 

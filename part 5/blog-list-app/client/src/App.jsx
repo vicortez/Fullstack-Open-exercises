@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
@@ -13,6 +13,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [blogFormKey, setBlogFormKey] = useState(0)
+  const [showBlogForm, setShowBlogForm] = useState(false)
 
   const notification = useNotification()
 
@@ -43,7 +44,8 @@ const App = () => {
       const res = await blogService.create({ title, author, url })
       setBlogs((blogs) => blogs.concat(res))
       notification({ message: `A new blog '${res.title}' by ${res.author} added`, type: 'success' })
-      refreshBlogForm()
+      // refreshBlogForm()
+      setShowBlogForm(false)
     } catch (error) {
       notification({ message: error.message ?? 'Error posting blog', type: 'error' })
     }
@@ -55,9 +57,41 @@ const App = () => {
     notification({ message: 'Logged out', type: 'success' })
   }
 
-  const refreshBlogForm = () => {
-    setBlogFormKey((prev) => prev + 1)
+  const handleClickLike = async (blog) => {
+    const newLikes = blog.likes != null ? blog.likes + 1 : 1
+    const updatedBlog = await blogService.put({ ...blog, likes: newLikes })
+    setBlogs((prev) => {
+      return prev.map((el) => {
+        if (el.id === blog.id) {
+          return { ...updatedBlog }
+        } else {
+          return el
+        }
+      })
+    })
   }
+
+  const handleClickRemove = async (blog) => {
+    const confirmation = window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)
+    if (!confirmation) {
+      return
+    }
+    await blogService.remove(blog.id)
+    setBlogs((prev) => prev.filter((el) => el.id !== blog.id))
+  }
+
+  // const refreshBlogForm = () => {
+  //   setBlogFormKey((prev) => prev + 1)
+  // }
+
+  const sortedBlogsData = useMemo(() => {
+    if (!user) return []
+    return blogs
+      .map((el) => {
+        return { ...el, showRemove: el.user?.username === user.username }
+      })
+      .toSorted((el1, el2) => el2.likes - el1.likes)
+  }, [blogs, user])
 
   return (
     <div>
@@ -69,9 +103,23 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
           <div>
             <h2>blogs</h2>
-            <BlogForm key={blogFormKey} onSubmit={handleSubmitBlog} />
-            {blogs.map((blog) => (
-              <Blog key={blog.id} blog={blog} />
+            {showBlogForm && (
+              <>
+                <BlogForm key={blogFormKey} onSubmit={handleSubmitBlog} />
+                <button onClick={() => setShowBlogForm(false)}>cancel</button>
+              </>
+            )}
+            {!showBlogForm && (
+              <button onClick={() => setShowBlogForm(true)}>create new form</button>
+            )}
+            {sortedBlogsData.map((blogData) => (
+              <Blog
+                key={blogData.id}
+                blog={blogData}
+                onLike={handleClickLike}
+                onRemove={handleClickRemove}
+                showRemove={blogData.showRemove}
+              />
             ))}
           </div>
         </div>
