@@ -109,18 +109,19 @@ const App = () => {
                 <button onClick={() => setShowBlogForm(false)}>cancel</button>
               </>
             )}
-            {!showBlogForm && (
-              <button onClick={() => setShowBlogForm(true)}>create new form</button>
-            )}
-            {sortedBlogsData.map((blogData) => (
-              <Blog
-                key={blogData.id}
-                blog={blogData}
-                onLike={handleClickLike}
-                onRemove={handleClickRemove}
-                showRemove={blogData.showRemove}
-              />
-            ))}
+            {!showBlogForm && <button onClick={() => setShowBlogForm(true)}>create new</button>}
+            <ol>
+              {sortedBlogsData.map((blogData) => (
+                <li key={blogData.id}>
+                  <Blog
+                    blog={blogData}
+                    onLike={handleClickLike}
+                    onRemove={handleClickRemove}
+                    showRemove={blogData.showRemove}
+                  />
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       )}

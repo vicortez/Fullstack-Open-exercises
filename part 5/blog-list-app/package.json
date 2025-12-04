@@ -10,6 +10,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=local node --inspect --watch index.js",
     "test": "cross-env NODE_ENV=test node --test --test-concurrency=1 \"./src/tests/**/*.test.{cjs,mjs,js}\"",
+    "dev:test": "cross-env NODE_ENV=test node --inspect --watch index.js",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -18,7 +19,8 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "mongoose": "^8.18.0"
+    "mongoose": "^8.18.0",
+    "morgan": "^1.10.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",
