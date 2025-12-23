@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { voteOnAnecdote } from '../reducers/anecdoteReducer'
 
 const AnecdotesList = () => {
-  const anecdotes = useSelector((state) => state)
+  const anecdotes = useSelector(({ anecdotes }) => anecdotes)
+  const filter = useSelector(({ filter }) => filter)
   const dispatch = useDispatch()
   const vote = (id) => {
     dispatch(voteOnAnecdote(id))
@@ -11,8 +12,16 @@ const AnecdotesList = () => {
 
   // This is easier to remember. Newer alternative (es2023): .toSorted(fn).
   const orderedAnecdotes = useMemo(
-    () => [...anecdotes].sort((a, z) => a.votes - z.votes),
-    [anecdotes]
+    () =>
+      [...anecdotes]
+        .sort((a, z) => a.votes - z.votes)
+        .filter((el) => {
+          if (filter) {
+            return el.content.includes(filter)
+          }
+          return true
+        }),
+    [anecdotes, filter]
   )
 
   return (
