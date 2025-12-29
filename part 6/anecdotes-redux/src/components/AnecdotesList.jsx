@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { voteOnAnecdote } from '../reducers/anecdoteReducer'
+import { addNotification } from '../reducers/messageReducer'
 
 const AnecdotesList = () => {
   const anecdotes = useSelector(({ anecdotes }) => anecdotes)
@@ -8,6 +9,8 @@ const AnecdotesList = () => {
   const dispatch = useDispatch()
   const vote = (id) => {
     dispatch(voteOnAnecdote(id))
+    const anec = anecdotes.find((anec) => anec.id === id)
+    dispatch(addNotification(`You voted '${anec.content}'`))
   }
 
   // This is easier to remember. Newer alternative (es2023): .toSorted(fn).

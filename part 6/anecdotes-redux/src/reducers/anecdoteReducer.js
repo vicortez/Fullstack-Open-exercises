@@ -1,3 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -19,32 +21,52 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-
-  switch (action.type) {
-    case 'VOTE': {
-      const noteId = action.noteId
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    voteOnAnecdote(state, action) {
+      const noteId = action.payload
       const note = state.find((el) => el.id === noteId)
-      const newNote = { ...note, votes: note.votes + 1 }
-      const newState = state.map((el) => (el.id !== noteId ? el : newNote))
-      return newState
-    }
-    case 'CREATE': {
-      const newAnecdote = asObject(action.content)
+      note.votes += 1
+    },
+    createAnecdote(state, action) {
+      const newAnecdote = asObject(action.payload)
+      state.push(newAnecdote)
+    },
+  },
+})
 
-      return [...state, newAnecdote]
-    }
-    default:
-      return state
-  }
-}
+export const { createAnecdote, voteOnAnecdote } = anecdoteSlice.actions
+export default anecdoteSlice.reducer
 
-// -- Anecdote action creators
+// --- old: using raw redux
+// const reducer = (state = initialState, action) => {
+//   console.log('state now: ', state)
+//   console.log('action', action)
 
-export const createAnecdote = (content) => ({ type: 'CREATE', content })
+//   switch (action.type) {
+//     case 'VOTE': {
+//       const noteId = action.noteId
+//       const note = state.find((el) => el.id === noteId)
+//       const newNote = { ...note, votes: note.votes + 1 }
+//       const newState = state.map((el) => (el.id !== noteId ? el : newNote))
+//       return newState
+//     }
+//     case 'CREATE': {
+//       const newAnecdote = asObject(action.content)
 
-export const voteOnAnecdote = (id) => ({ type: 'VOTE', noteId: id })
+//       return [...state, newAnecdote]
+//     }
+//     default:
+//       return state
+//   }
+// }
 
-export default reducer
+// // -- Anecdote action creators
+
+// export const createAnecdote = (content) => ({ type: 'CREATE', content })
+
+// export const voteOnAnecdote = (id) => ({ type: 'VOTE', noteId: id })
+
+// export default reducer

@@ -1,22 +1,38 @@
-// a typical redux reducer: receives state and action, returns state
-const filterReducer = (state = '', action) => {
-  console.log('[reducer] action:', action)
+import { createSlice } from '@reduxjs/toolkit'
 
-  switch (action.type) {
-    case 'UPDATE_FILTER':
-      return action.text
-    default:
-      return state
-  }
-}
+const filterSlice = createSlice({
+  name: 'filter',
+  initialState: '',
+  reducers: {
+    updateFilter(state, { payload }) {
+      return payload
+    },
+  },
+})
 
-// -- filter action Creators
+export const { updateFilter } = filterSlice.actions
+export default filterSlice.reducer
 
-export const updateFilter = (text) => {
-  return {
-    type: 'UPDATE_FILTER',
-    text,
-  }
-}
+// --- Old: using raw Redux
+// // a typical redux reducer: receives state and action, returns state
+// const filterReducer = (state = '', action) => {
+//   console.log('[reducer] action:', action)
 
-export default filterReducer
+//   switch (action.type) {
+//     case 'UPDATE_FILTER':
+//       return action.text
+//     default:
+//       return state
+//   }
+// }
+
+// // -- filter action Creators
+
+// export const updateFilter = (text) => {
+//   return {
+//     type: 'UPDATE_FILTER',
+//     text,
+//   }
+// }
+
+// export default filterReducer
