@@ -1,9 +1,19 @@
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdotesList from './components/AnecdotesList'
-import Notification from './components/Notification'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
+import { setAnecdotes } from './reducers/anecdoteReducer'
+import anecdotesApi from './services/anecdotesApi'
 
 const App = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    anecdotesApi.getAll().then((data) => dispatch(setAnecdotes(data)))
+  }, [dispatch])
+
   return (
     <div>
       <Notification />
