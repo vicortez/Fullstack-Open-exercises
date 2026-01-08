@@ -7,10 +7,11 @@ const AnecdotesList = () => {
   const anecdotes = useSelector(({ anecdotes }) => anecdotes)
   const filter = useSelector(({ filter }) => filter)
   const dispatch = useDispatch()
+
   const vote = (id) => {
     dispatch(voteOnAnecdote(id))
     const anec = anecdotes.find((anec) => anec.id === id)
-    dispatch(addNotification(`You voted '${anec.content}'`))
+    dispatch(addNotification(`You voted '${anec.content}'`, 4000))
   }
 
   // This is easier to remember. Newer alternative (es2023): .toSorted(fn).

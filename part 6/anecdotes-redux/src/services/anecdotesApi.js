@@ -30,4 +30,20 @@ const create = async (text) => {
   return await res.json()
 }
 
-export default { getAll, create }
+const update = async (anecdote) => {
+  const body = JSON.stringify({
+    content: anecdote.content,
+    votes: anecdote.votes,
+  })
+  const options = {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body,
+  }
+  const res = await fetch(`${baseUrl}/${anecdote.id}`, options)
+  return await res.json()
+}
+
+export default { getAll, create, update }

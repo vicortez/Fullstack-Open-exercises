@@ -46,8 +46,13 @@
       "votes": 0
     },
     {
-      "id": "e255",
       "content": "ASDF",
+      "votes": 11,
+      "id": "e255"
+    },
+    {
+      "id": "27ec",
+      "content": "asdf",
       "votes": 0
     }
   ]
