@@ -1,7 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { use } from 'react'
+import { NotificationContext } from '../context/NotificationContext'
 import anecdotesApi from '../services/anecdotesApi'
 
 const AnecdoteForm = () => {
+  const { addNotification } = use(NotificationContext)
+
   const queryClient = useQueryClient()
   const anecdoteMutation = useMutation({
     mutationFn: (text) => anecdotesApi.create(text),
@@ -15,10 +19,11 @@ const AnecdoteForm = () => {
   const handleSubmitAnecdoteForm = (ev) => {
     ev.preventDefault()
     const text = ev.target.content?.value
-    if (!text && text.trim()) {
-      return
-    }
-    if (text.length < 5) {
+    if (!text || !text.trim() || text.length < 5) {
+      // obs: the exercise text suggests there is a validation in the backend? but we are using
+      // json-server. There is no validation. So we can't use the onError callback. Otherwise we
+      // would place the trigger there.
+      addNotification('Too short anecdote. Must have length 5 or more')
       return
     }
     anecdoteMutation.mutate(text)

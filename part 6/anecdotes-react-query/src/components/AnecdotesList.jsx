@@ -1,14 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
-import { addNotification } from '../reducers/messageReducer'
-import { default as a, default as anecdotesApi } from '../services/anecdotesApi'
+import { use, useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { NotificationContext } from '../context/NotificationContext'
+import anecdotesApi from '../services/anecdotesApi'
 
 const AnecdotesList = () => {
+  const { addNotification } = use(NotificationContext)
+
   const { data: anecdotes } = useQuery({
     queryKey: ['anecdotes'],
-    queryFn: a.getAll,
+    queryFn: anecdotesApi.getAll,
     initialData: [],
     retry: 1,
   })
@@ -23,12 +24,11 @@ const AnecdotesList = () => {
   })
 
   const filter = useSelector(({ filter }) => filter)
-  const dispatch = useDispatch()
 
   const vote = (id) => {
     const anec = anecdotes.find((anec) => anec.id === id)
     updateAnecdoteMutation.mutate({ ...anec, votes: anec.votes + 1 })
-    dispatch(addNotification(`You voted '${anec.content}'`, 4000))
+    addNotification(`You voted '${anec.content}'`)
   }
 
   // This is easier to remember. Newer alternative (es2023): .toSorted(fn).
@@ -42,7 +42,7 @@ const AnecdotesList = () => {
           }
           return true
         }),
-    [anecdotes, filter]
+    [anecdotes, filter],
   )
 
   return (
